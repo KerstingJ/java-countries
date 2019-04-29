@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 
 @RestController
 @RequestMapping("/population")
@@ -41,6 +42,16 @@ public class PopulationController
                 (c1, c2) -> c2.getPopulation() - c1.getPopulation()
         );
         return new ResponseEntity<>(countries.countryList.get(0), HttpStatus.OK);
+    }
+
+    @GetMapping("/median")
+    public ResponseEntity<?> getMedianPopulation()
+    {
+        ArrayList<Country> countries = CountriesApplication.countriesList.countryList;
+        countries.sort(Comparator.comparingInt(Country::getPopulation));
+        int middle = countries.size() / 2;
+
+        return new ResponseEntity<>(countries.get(middle), HttpStatus.OK);
     }
 
 
